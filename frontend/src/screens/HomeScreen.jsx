@@ -1,12 +1,10 @@
 import { useGetProductsQuery } from '../slices/productsApiSlice'
-import { useDispatch, useSelector } from 'react-redux'
 import { Row, Col } from 'react-bootstrap'
 import Product from '../components/Product'
 
 
 const HomeScreen = () => {
   const {data: products, isLoading, error} = useGetProductsQuery();
-  const dispatch = useDispatch()
   
   return (
     <>
