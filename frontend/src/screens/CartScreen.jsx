@@ -11,7 +11,7 @@ import {
 } from "react-bootstrap";
 import { FaTrash } from "react-icons/fa";
 import Message from "../components/Message";
-import { addToCart } from "../slices/cartSlice";
+import { addToCart, removeFromCart } from "../slices/cartSlice";
 
 const CartScreen = () => {
   const navigate = useNavigate();
@@ -20,9 +20,17 @@ const CartScreen = () => {
   const cart = useSelector((state) => state.cart);
   const { cartItems } = cart;
 
-  const addToCartHandler = (async(product, qty) => {
-    dispatch(addToCart({...product, qty}));
-  })
+  const addToCartHandler = async (product, qty) => {
+    dispatch(addToCart({ ...product, qty }));
+  };
+
+  const removeFromCartHandler = async (id) => {
+    dispatch(removeFromCart(id));
+  };
+
+  const checkOutHandler = () => {
+    navigate("/login?redirect=/shipping");
+  };
 
   return (
     <Row>
@@ -48,7 +56,9 @@ const CartScreen = () => {
                     <Form.Control
                       as="select"
                       value={item.qty}
-                      onChange={(e) => addToCartHandler(item, Number(e.target.value))}
+                      onChange={(e) =>
+                        addToCartHandler(item, Number(e.target.value))
+                      }
                     >
                       {/*HERE WE ARE TRYING TO CHECK THE QUANTITY OF A PARTICULAR PRODUCT PRESENT SO THAT BASED ON IT THE APPROPRIATE OPTIONS CAN BE PROVIDED TO SELECT*/}
                       {/*...Array() => will create an array with the length of number of products in stock*/}
@@ -61,7 +71,11 @@ const CartScreen = () => {
                     </Form.Control>
                   </Col>
                   <Col md={2}>
-                    <Button type="button" variant="light">
+                    <Button
+                      type="button"
+                      variant="light"
+                      onClick={() => removeFromCartHandler(item._id)}
+                    >
                       <FaTrash />
                     </Button>
                   </Col>
@@ -89,6 +103,7 @@ const CartScreen = () => {
                 type="button"
                 className="btn-block"
                 disabled={cartItems.length === 0}
+                onClick={checkOutHandler}
               >
                 Proceed To Checkout
               </Button>
