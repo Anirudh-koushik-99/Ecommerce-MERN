@@ -1,6 +1,6 @@
 import asyncHandler from "../middleware/asyncHandler.js";
 import User from "../models/userModel.js";
-import jwt from 'jsonwebtoken'
+import generateToken from "../utils/generateToken.js";
 
 
 //@desc Auth user and get token
@@ -11,19 +11,8 @@ const authUser = asyncHandler(async(req, res) => {
 
     const user = await User.findOne({email: email});
     if(user && (await user.matchPassword(password))) {
-        /*USING JWT TO CREATE A TOKEN*/
-        /*JWT TAKES IN A payload AS FIRST PARAMETER jwt secret AS SECOND PARAMETER AND AND expiresIn ? AS THIRD ARGUMENT*/
-        const token = jwt.sign({userId: user._id}, process.env.JWT_SECRET, {
-            expiresIn: '1000d'
-        });
-
-        //Setting JWT as HTTP-Only cookie
-        res.cookie('jwt', token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV !== 'development',
-            sameSite: 'strict',
-            maxAge: 1000 * 24 *60 * 60 * 1000,
-        })
+        //Generate token will 1.Create a token using jwt 2.Sets the token as HTTP-Only cookie
+        generateToken(res, user._id)
 
         res.json({
             _id: user._id,
@@ -41,7 +30,37 @@ const authUser = asyncHandler(async(req, res) => {
 //@route    POST /api/users
 //@access   Public
 const registerUser = asyncHandler(async(req, res) => {
-    res.send('register user');
+    const {name, email, password} = req.body;
+
+    const userExist = await User.findOne({email:email})
+
+    if(userExist){
+        res.status(400);
+        throw new Error('User already exists')
+    }
+
+    const user = await User.create({
+        name,
+        email,
+        password
+    });
+
+    if(user){
+        //Generate token will 1.Create a token using jwt 2.Sets the token as HTTP-Only cookie
+        generateToken(res, user._id)
+
+        res.status(201).json({
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+          isAdmin: user.isAdmin,  
+        })
+    }else{
+        res.status(400);
+        throw new Error('Invalid user data')
+    }
+
+    
 })
 
 //@desc Logout user / clear cookie
