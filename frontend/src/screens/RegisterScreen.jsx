@@ -32,26 +32,25 @@ const RegisterScreen = () => {
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    if(password !== confirmPassword){
-        toast.error('Passwords do not match');
-    }else{
-        try {
-
-            const res = await register({ name, email, password }).unwrap();
-            dispatch(setCredentials({ ...res }));
-            navigate(redirect);
-          } catch (err) {
-            toast.error(err?.data?.message || err.error);
-          }
+    if (password !== confirmPassword) {
+      toast.error("Passwords do not match");
+    } else {
+      try {
+        const res = await register({ name, email, password }).unwrap();
+        dispatch(setCredentials({ ...res }));
+        navigate(redirect);
+      } catch (err) {
+        toast.error(err?.data?.message || err.error);
+      }
     }
-    
+
     console.log("Submit");
   };
   return (
     <FormContainer>
       <h1>Sign Up</h1>
       <Form onSubmit={submitHandler}>
-      <Form.Group controlId="name" className="my-3">
+        <Form.Group controlId="name" className="my-3">
           <Form.Label>Name</Form.Label>
           <Form.Control
             type="text"

@@ -6,7 +6,7 @@ import {
   Route,
   RouterProvider,
 } from "react-router-dom";
-import { Provider} from 'react-redux'
+import { Provider } from "react-redux";
 import store from "./store.js";
 import "./assets/styles/index.css";
 import "./assets/styles/bootstrap.custom.css";
@@ -19,25 +19,31 @@ import CartScreen from "./screens/CartScreen";
 import LoginScreen from "./screens/LoginScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 import ShippingScreen from "./screens/ShippingScreen.jsx";
+import PrivateRoute from "./components/PrivateRoute.jsx";
 
-const router = createBrowserRouter(createRoutesFromElements(
-  <Route path="/" element={<App />}>
-    <Route index={true} path="/" element={<HomeScreen />}/>
-    <Route path="/login" element={<LoginScreen />} />
-    <Route path="/products/:id" element={<ProductScreen />} />
-    <Route path="/cart" element={<CartScreen />} />
-    <Route path="/register" element={<RegisterScreen />} />
-    <Route path="/shipping" element={<ShippingScreen />} />
-  </Route>
-))
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    <Route path="/" element={<App />}>
+      <Route index={true} path="/" element={<HomeScreen />} />
+      <Route path="/login" element={<LoginScreen />} />
+      <Route path="/products/:id" element={<ProductScreen />} />
+      <Route path="/cart" element={<CartScreen />} />
+      <Route path="/register" element={<RegisterScreen />} />
+
+      <Route path="/shipping" element={<PrivateRoute />}>
+        <Route path="/shipping" element={<ShippingScreen />} />
+      </Route>
+
+    </Route>
+  )
+);
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-    <RouterProvider router={router} />
+      <RouterProvider router={router} />
     </Provider>
-    
   </React.StrictMode>
 );
 
