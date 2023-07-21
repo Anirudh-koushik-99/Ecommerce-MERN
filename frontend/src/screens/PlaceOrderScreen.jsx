@@ -1,15 +1,33 @@
-import React from 'react'
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { Link, useNavigate } from 'react-router-dom';
+import { Button, Row, Col, ListGroup, Image, Card } from 'react-bootstrap'
+import { useCreateOrderMutation } from '../slices/ordersApiSlice'
 import CheckoutSteps from '../components/CheckoutSteps'
-import { Button } from 'react-bootstrap'
+
 
 const PlaceOrderScreen = () => {
+  const cart = useSelector((state) => state.cart)
+  const navigate = useNavigate();
+
+  useEffect (() => {
+    if(!cart.shippingAddress.address){
+      navigate('/shipping')
+    }else if(!cart.paymentMethod){
+      navigate('/payment');
+    }
+  }, [navigate, cart.paymentMethod, cart.shippingAddress.address])
+
   return (
-    <div>
+    <>
         <CheckoutSteps step1 step2 step3 step4 />
-      <h1>Place Order</h1>
-      <Button type='submit' variant='primary'>Place Order</Button>
-      
-    </div>
+        <Row>
+          <Col md={8}>Column
+          </Col>
+          <Col md={4}>Column
+          </Col>
+        </Row>
+    </>
   )
 }
 
