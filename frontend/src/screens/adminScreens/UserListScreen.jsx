@@ -1,18 +1,29 @@
-
 import React from "react";
 import { LinkContainer } from "react-router-bootstrap";
 import { Table, Button } from "react-bootstrap";
 import { FaTrash, FaTimes, FaEdit, FaCheck } from "react-icons/fa";
-import { useGetUsersQuery } from "../../slices/usersApiSlice";
+import { toast } from "react-toastify";
+import {
+  useGetUsersQuery,
+  useDeleteUsersMutation,
+} from "../../slices/usersApiSlice";
 import Loader from "../../components/Loader";
 import Message from "../../components/Message";
 
 const UserListScreen = () => {
   const { data: users, isLoading, error, refetch } = useGetUsersQuery();
+  const [deleteUser, { isLoading: loadingDelete }] = useDeleteUsersMutation();
 
-  const deleteHandler = (id) => {
-    console.log('delete', id)
-  }
+  const deleteHandler = async (id) => {
+    if (window.confirm("Are you sure?")) {
+      try {
+        await deleteUser(id);
+        refetch();
+      } catch (err) {
+        toast.error(err?.data?.message || err.error);
+      }
+    }
+  };
 
   return (
     <>
@@ -37,18 +48,31 @@ const UserListScreen = () => {
               <tr key={user._id}>
                 <td>{user._id}</td>
                 <td>{user.name}</td>
-                <td><a href={`mailto:${user.email}`}>{user.email}</a></td>
-                <td>{user.isAdmin ? <FaCheck style={{color: 'green'}}/> : <FaTimes style={{color: 'red'}}/>} </td>      
+                <td>
+                  <a href={`mailto:${user.email}`}>{user.email}</a>
+                </td>
+                <td>
+                  {user.isAdmin ? (
+                    <FaCheck style={{ color: "green" }} />
+                  ) : (
+                    <FaTimes style={{ color: "red" }} />
+                  )}{" "}
+                </td>
                 <td>
                   <LinkContainer to={`admin/user/${user._id}/edit`}>
                     <Button variant="light" className="btn-sm">
                       <FaEdit />
                     </Button>
                   </LinkContainer>
-                  <Button variant="light" className="btn-sm" onClick={() => deleteHandler(user._id)}><FaTrash /></Button>
+                  <Button
+                    variant="light"
+                    className="btn-sm"
+                    onClick={() => deleteHandler(user._id)}
+                  >
+                    <FaTrash />
+                  </Button>
                 </td>
               </tr>
-              
             ))}
           </tbody>
         </Table>

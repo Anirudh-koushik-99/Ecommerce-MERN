@@ -165,7 +165,21 @@ const deleteUser = asyncHandler(async(req, res) => {
 //@route    PUT /api/users/:id
 //@access   Private/Admin
 const updateUser = asyncHandler(async(req, res) => {
-    res.send('update user');
+    const user = await User.findById(req.params.id);
+
+    if(user){
+        user.name = req.body.name || user.name
+        user.email = req.body.email || user.email
+        user.isAdmin = Boolean(req.body.isAdmin)
+
+        const updatedUser = await user.save()
+        res.status(200).json({
+            _id: updatedUser._id,
+            name: updatedUser.name,
+            email: updatedUser.email,
+            isAdmin: updatedUser.isAdmin,
+        })
+    }
 })
 
 
