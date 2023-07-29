@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { FaShoppingCart, FaUser } from "react-icons/fa";
 import { LinkContainer } from "react-router-bootstrap";
 import {useSelector, useDispatch} from "react-redux";
-import {toast} from 'react-toastify'
 import { useLogoutMutation } from "../slices/usersApiSlice";
 import { removeCredentials } from "../slices/authSlice";
 import logo from "../assets/logo.png";
@@ -11,7 +10,6 @@ import logo from "../assets/logo.png";
 const Header = () => {
   const {cartItems} = useSelector((state) => state.cart)
   const {userInfo} = useSelector((state) => state.auth)
-  console.log(cartItems)
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
