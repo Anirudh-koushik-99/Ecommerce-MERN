@@ -11,13 +11,13 @@ import {
   Card,
   Button,
   Form,
-  ListGroupItem,
 } from "react-bootstrap";
 import { useGetProductDetailsQuery, useCreateReviewMutation } from "../slices/productsApiSlice";
 import  {addToCart}  from "../slices/cartSlice";
 import Rating from "../components/Rating";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
+import Meta from "../components/Meta";
 
 
 const ProductScreen = () => {
@@ -74,6 +74,7 @@ const ProductScreen = () => {
         </Message>
       ) : (
         <>
+        <Meta title={product.name} />
           <Row>
             <Col md={5}>
               <Image src={product.image} alt={product.name} fluid />

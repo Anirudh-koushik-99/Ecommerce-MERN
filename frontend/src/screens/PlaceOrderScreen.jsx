@@ -16,7 +16,6 @@ import { clearCartItems } from "../slices/cartSlice";
 import CheckoutSteps from "../components/CheckoutSteps";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
-import { PAYPAL_URL } from "../constants";
 
 const PlaceOrderScreen = () => {
   const cart = useSelector((state) => state.cart);

@@ -1,6 +1,6 @@
 import React from "react";
 import { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import {
   Row,
@@ -8,7 +8,6 @@ import {
   ListGroup,
   Card,
   Image,
-  Form,
   Button,
 } from "react-bootstrap";
 import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
@@ -23,8 +22,6 @@ import {
 } from "../slices/ordersApiSlice";
 
 const OrderScreen = () => {
-  const dispatch = useDispatch();
-
   const { id: orderId } = useParams();
 
   const {
@@ -49,10 +46,8 @@ const OrderScreen = () => {
   } = useGetPayPalClientIdQuery();
 
   useEffect(() => {
+    /*EVERYTHING AVAILABLE ON PAYPAL DOCUMENTATION*/
     if (!errorPayPal && !loadingPayPal && paypal.clientId) {
-      {
-        /*EVERYTHING AVAILABLE ON PAYPAL DOCUMENTATION*/
-      }
       const loadPayPalScript = async () => {
         paypalDispatch({
           type: "resetOptions",
