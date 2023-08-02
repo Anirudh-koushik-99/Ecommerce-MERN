@@ -24,8 +24,6 @@ app.use(express.urlencoded({ extended: true }));
 //COOKIE PARSER MIDDLEWARE
 app.use(cookieParser());
 
-
-
 app.use("/api/products", productRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/orders", orderRoutes);
